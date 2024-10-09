@@ -20,6 +20,7 @@ def main():
         file_contents = file.read()
     error = False
     ptr = 0
+    line_number = 0
     while ptr < len(file_contents):
         c = file_contents[ptr]
         if c == '(':
@@ -77,10 +78,10 @@ def main():
             ptr += 1
             continue
         elif c == "\n":
+            line_number += 1
             pass
         else:
             error = True
-            line_number = file_contents.count('\n', 0, file_contents.find(c)) + 1
             print(
                 "[line %s] Error: Unexpected character: %s" % (line_number, c),
                 file=sys.stderr,
