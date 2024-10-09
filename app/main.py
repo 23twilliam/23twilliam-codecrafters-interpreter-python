@@ -71,6 +71,7 @@ def main():
             if ptr < len(file_contents) - 1 and file_contents[ptr + 1] == '/':
                 while ptr < len(file_contents) and file_contents[ptr] != "\n":
                     ptr += 1
+                    line_number += 1
                 c = '//'
             else:
                 print("SLASH / null")
