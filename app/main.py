@@ -41,10 +41,9 @@ def main():
         elif c == '*':
             print("STAR * null")
         elif c == "=":
-            if c.match('='):
-                print("EQUAL_EQUAL == null")
-            else:
-                print("EQUAL = null")
+            print("EQUAL = null")
+        elif c == '=' and file_contents[c+1] == '=':
+            print("EQUAL_EQUAL == null")
         else:
             error = True
             line_number = file_contents.count('\n', 0, file_contents.find(c)) + 1
