@@ -75,7 +75,7 @@ def main():
                 print("SLASH / null")
         elif c == " " or c == "\r" or c == "\t":
             ptr += 1
-            pass
+            continue
         else:
             error = True
             line_number = file_contents.count('\n', 0, file_contents.find(c)) + 1
