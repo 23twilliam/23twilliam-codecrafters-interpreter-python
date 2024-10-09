@@ -72,7 +72,7 @@ def main():
                 line_number += 1
                 while ptr < len(file_contents) and file_contents[ptr] != "\n":
                     ptr += 1
-                c = '//'
+                #c = '//'
 
             else:
                 print("SLASH / null")
