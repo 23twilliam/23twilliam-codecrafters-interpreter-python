@@ -56,7 +56,8 @@ def main():
                 file=sys.stderr,
             )
             ptr += 1
-
+            continue
+        ptr += len(c)
     print("EOF  null")
     if error:
         exit(65)
