@@ -73,7 +73,7 @@ def main():
                 c = '//'
             else:
                 print("SLASH / null")
-        elif c == " " or c == "\r" or c == "\t":
+        elif c == " " or c == "\r" or c == "\t" or c == "\n":
             ptr += 1
             continue
         else:
