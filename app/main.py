@@ -42,18 +42,30 @@ def main():
             print("SEMICOLON ; null")
         elif c == '*':
             print("STAR * null")
-        elif c == "=":
-            if ptr < len(file_contents) - 1 and file_contents[ptr + 1] == "=":
+        elif c == '=':
+            if ptr < len(file_contents) - 1 and file_contents[ptr + 1] == '=':
                 print("EQUAL_EQUAL == null")
-                c = "=="
+                c = '=='
             else:
                 print("EQUAL = null")
         elif c == '!':
-            if ptr < len(file_contents) - 1 and file_contents[ptr + 1] == "=":
+            if ptr < len(file_contents) - 1 and file_contents[ptr + 1] == '=':
                 print("BANG_EQUAL != null")
-                c = "!="
+                c = '!='
             else:
                 print("BANG ! null")
+        elif c == '<':
+            if ptr < len(file_contents) - 1 and file_contents[ptr + 1] == '=':
+                print("LESS_EQUAL <= null")
+                c = '<='
+            else:
+                print("LESS < null")
+        elif c == '>':
+            if ptr < len(file_contents) - 1 and file_contents[ptr + 1] == '=':
+                print("GREATER_EQUAL >= null")
+                c = '>='
+            else:
+                print("GREATER > null")
         else:
             error = True
             line_number = file_contents.count('\n', 0, file_contents.find(c)) + 1
