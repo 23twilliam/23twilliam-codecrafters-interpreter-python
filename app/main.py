@@ -72,7 +72,7 @@ def main():
                 line_number += 1
                 while ptr < len(file_contents) and file_contents[ptr] != "\n":
                     ptr += 1
-                #c = '//'
+                #c = '//' dont want to increment by 2 on comments
 
             else:
                 print("SLASH / null")
@@ -82,6 +82,17 @@ def main():
         elif c == "\n":
            line_number += 1
            pass
+        elif c == '"':
+            word = ""
+            ptr += 1
+            while ptr < len(file_contents) and file_contents[ptr] != '"':
+                word += file_contents[ptr]
+                ptr += 1
+            if ptr == len(file_contents):
+                error = True
+                print(f"[line %s] Error: Unterminated string." % line_number, file=sys.stderr)
+            else:
+                print(f'STRING "{word}" {word}')
         else:
             error = True
             print(
