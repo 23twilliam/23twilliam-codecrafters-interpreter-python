@@ -22,11 +22,7 @@ def main():
     ptr = 0
     while ptr < len(file_contents):
         c = file_contents[ptr]
-        if c == '\n':
-            ptr += 1
-        elif c == " " or c == "\r" or c == "\t":
-            pass
-        elif c == '(':
+        if c == '(':
             print("LEFT_PAREN ( null")
         elif c == ')':
             print("RIGHT_PAREN ) null")
@@ -77,6 +73,8 @@ def main():
                 c = '//'
             else:
                 print("SLASH / null")
+        if c == " " or c == "\r" or c == "\t":
+            pass
         else:
             error = True
             line_number = file_contents.count('\n', 0, file_contents.find(c)) + 1
