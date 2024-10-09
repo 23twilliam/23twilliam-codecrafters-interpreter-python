@@ -48,6 +48,12 @@ def main():
                 c = "=="
             else:
                 print("EQUAL = null")
+        elif c == '!':
+            if ptr < len(file_contents) - 1 and file_contents[ptr + 1] == "=":
+                print("BANG_EQUAL != null")
+                c = "!="
+            else:
+                print("BANG ! null")
         else:
             error = True
             line_number = file_contents.count('\n', 0, file_contents.find(c)) + 1
