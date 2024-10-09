@@ -42,7 +42,7 @@ def main():
             print("STAR * null")
         elif c == "=":
             print("EQUAL = null")
-        elif c == '=' and file_contents[c+1] == '=':
+        elif c == '=' and next(file_contents) == '=':
             print("EQUAL_EQUAL == null")
         else:
             error = True
