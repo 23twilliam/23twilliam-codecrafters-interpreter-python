@@ -20,7 +20,6 @@ def main():
         file_contents = file.read()
     error = False
     ptr = 0
-    line_number = 0
     while ptr < len(file_contents):
         c = file_contents[ptr]
         if c == '(':
@@ -76,7 +75,6 @@ def main():
                 print("SLASH / null")
         elif c == " " or c == "\r" or c == "\t" or c == "\n":
             ptr += 1
-            line_number += 1
             continue
         else:
             error = True
