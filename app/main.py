@@ -67,7 +67,12 @@ def main():
             else:
                 print("GREATER > null")
         elif c == '/':
-            print("SLASH / null")
+            if ptr < len(file_contents) - 1 and file_contents[ptr + 1] == '/':
+                while ptr < len(file_contents) and file_contents[ptr] != "\n":
+                    ptr += 1
+                c = '//'
+            else:
+                print("SLASH / null")
         else:
             error = True
             line_number = file_contents.count('\n', 0, file_contents.find(c)) + 1
