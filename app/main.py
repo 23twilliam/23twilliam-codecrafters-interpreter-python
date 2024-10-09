@@ -55,8 +55,7 @@ def main():
                 "[line %s] Error: Unexpected character: %s" % (line_number, c),
                 file=sys.stderr,
             )
-            ptr += 1
-        ptr += len(c)
+
     print("EOF  null")
     if error:
         exit(65)
