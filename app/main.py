@@ -22,7 +22,11 @@ def main():
     ptr = 0
     while ptr < len(file_contents):
         c = file_contents[ptr]
-        if c == '(':
+        if c == '\n':
+            ptr += 1
+        elif c == " " or c == "\r" or c == "\t":
+            pass
+        elif c == '(':
             print("LEFT_PAREN ( null")
         elif c == ')':
             print("RIGHT_PAREN ) null")
