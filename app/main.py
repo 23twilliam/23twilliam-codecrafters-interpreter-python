@@ -79,7 +79,6 @@ def main():
             continue
         elif c == "\n":
            line_number += 1
-           ptr += 1
            pass
         else:
             error = True
