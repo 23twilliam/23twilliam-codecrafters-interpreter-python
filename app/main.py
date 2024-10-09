@@ -79,6 +79,7 @@ def main():
             continue
         elif c == "\n" or c == "r":
            line_number += 1
+           print(line_number, end='')
            pass
         else:
             error = True
