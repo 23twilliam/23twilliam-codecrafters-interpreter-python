@@ -18,7 +18,7 @@ def main():
 
     with open(filename) as file:
         file_contents = file.read()
-
+    error = False
     for c in file_contents:
         if c == '(':
             print("LEFT_PAREN ( null")
@@ -40,7 +40,18 @@ def main():
             print("SEMICOLON ; null")
         if c == '*':
             print("STAR * null")
+        else:
+            error = True
+            line_number = file_contents.count('\n', 0, file_contents.find(c)) + 1
+            print (
+                "[line %s] Error: Unexpected character: %s" % (line_number, c),
+                file=sys.stderr,
+            )
     print("EOF  null")
+    if error:
+        exit(65)
+    else:
+        exit(0)
 
 
 if __name__ == "__main__":
