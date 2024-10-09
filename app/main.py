@@ -69,7 +69,7 @@ def main():
                 print("GREATER > null")
         elif c == '/':
             if ptr < len(file_contents) - 1 and file_contents[ptr + 1] == '/':
-                while ptr < len(file_contents) and file_contents[ptr] != "\n":
+                #while ptr < len(file_contents) and file_contents[ptr] != "\n":
                     #ptr += 1
                 c = '//'
                 line_number += 1
