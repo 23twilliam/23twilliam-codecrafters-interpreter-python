@@ -43,7 +43,7 @@ def main():
         else:
             error = True
             line_number = file_contents.count('\n', 0, file_contents.find(c)) + 1
-            print (
+            print(
                 "[line %s] Error: Unexpected character: %s" % (line_number, c),
                 file=sys.stderr,
             )
