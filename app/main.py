@@ -73,7 +73,9 @@ def main():
                 c = '//'
             else:
                 print("SLASH / null")
-        elif c == " " or c == "\r" or c == "\t" or c == "\n":
+        elif c == " " or c == "\r" or c == "\t":
+            pass
+        elif c == "\n":
             continue
         else:
             error = True
