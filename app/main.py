@@ -76,7 +76,6 @@ def main():
             else:
                 print("SLASH / null")
         elif c == " " or c == "\t":
-            ptr += 1
             continue
         elif c == "\n" or c == "r":
            line_number += 1
