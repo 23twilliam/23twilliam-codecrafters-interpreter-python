@@ -74,10 +74,10 @@ def main():
                 c = '//'
             else:
                 print("SLASH / null")
-        elif c == " " or c == "\r" or c == "\t":
+        elif c == " " or c == "\t":
             ptr += 1
             continue
-        elif c == "\n":
+        elif c == "\n" or c == "r":
            line_number += 1
            pass
         else:
