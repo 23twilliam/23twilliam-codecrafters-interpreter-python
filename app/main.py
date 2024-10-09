@@ -22,23 +22,23 @@ def main():
     for c in file_contents:
         if c == '(':
             print("LEFT_PAREN ( null")
-        if c == ')':
+        elif c == ')':
             print("RIGHT_PAREN ) null")
-        if c == '{':
+        elif c == '{':
             print("LEFT_BRACE { null")
-        if c == '}':
+        elif c == '}':
             print("RIGHT_BRACE } null")
-        if c == ',':
+        elif c == ',':
             print("COMMA , null")
-        if c == '.':
+        elif c == '.':
             print("DOT . null")
-        if c == '-':
+        elif c == '-':
             print("MINUS - null")
-        if c == '+':
+        elif c == '+':
             print("PLUS + null")
-        if c == ';':
+        elif c == ';':
             print("SEMICOLON ; null")
-        if c == '*':
+        elif c == '*':
             print("STAR * null")
         else:
             error = True
