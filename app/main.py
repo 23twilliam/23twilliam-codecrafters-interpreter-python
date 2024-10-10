@@ -220,8 +220,8 @@ class Scanner:
     def identifier(self) -> None:
         while self.is_alpha_numeric(self.peek()):
             self.advance()
-
-        type = self.keywords.get(self.current, TokenType.IDENTIFIER)
+        text = self.source[self.start: self.current]
+        type = self.keywords.get(text, TokenType.IDENTIFIER)
         self.add_token(type)
 
     def error(self, char: str) -> None:
