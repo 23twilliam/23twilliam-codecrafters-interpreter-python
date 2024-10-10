@@ -30,7 +30,24 @@ class TokenType(enum.Enum):
     STRING = "STRING"
     NUMBER = "NUMBER"
     EOF = "EOF"
+    # Identifiers
     IDENTIFIER = "IDENTIFIER"
+    AND = "AND"
+    CLASS = "CLASS"
+    ELSE = "ELSE"
+    FALSE = "FALSE"
+    FOR = "FOR"
+    FUN = "FUN"
+    IF = "IF"
+    NIL = "NIL"
+    OR = "OR"
+    PRINT = "PRINT"
+    RETURN = "RETURN"
+    SUPER = "SUPER"
+    THIS = "THIS"
+    TRUE = "TRUE"
+    VAR = "VAR"
+    WHILE = "WHILE"
 
 
 class Token:
@@ -49,6 +66,25 @@ class Token:
 
 
 class Scanner:
+
+    keywords = {
+        "and": TokenType.AND,
+        "class": TokenType.CLASS,
+        "else": TokenType.ELSE,
+        "false": TokenType.FALSE,
+        "for": TokenType.FOR,
+        "fun": TokenType.FUN,
+        "if": TokenType.IF,
+        "nil": TokenType.NIL,
+        "or": TokenType.OR,
+        "print": TokenType.PRINT,
+        "return": TokenType.RETURN,
+        "super": TokenType.SUPER,
+        "this": TokenType.THIS,
+        "true": TokenType.TRUE,
+        "var": TokenType.VAR,
+        "while": TokenType.WHILE,
+    }
 
     def __init__(self, source: str) -> None:
         self.source = source
@@ -122,7 +158,7 @@ class Scanner:
             case _:
                 if self.is_digit(char):
                     self.number()
-                elif (self.is_alpha(char)):
+                elif self.is_alpha(char):
                     self.identifier()
                 else:
                     self.error(f"Unexpected character: {char}")
@@ -178,14 +214,15 @@ class Scanner:
     def is_alpha(self, char: str) -> bool:
         return "a" <= char <= "z" or "A" <= char <= "Z" or char == "_"
 
-    def is_alpha_numeric (self, char: str) -> bool:
+    def is_alpha_numeric(self, char: str) -> bool:
         return self.is_alpha(char) or self.is_digit(char)
 
     def identifier(self) -> None:
         while self.is_alpha_numeric(self.peek()):
             self.advance()
 
-        self.add_token(TokenType.IDENTIFIER)
+        type = self.keywords.get(self.current, TokenType.IDENTIFIER)
+        self.add_token(type)
 
     def error(self, char: str) -> None:
         self.errors.append(f"[line {self.line}] Error: {char}")
