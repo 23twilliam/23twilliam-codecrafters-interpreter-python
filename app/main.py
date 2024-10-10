@@ -1,4 +1,178 @@
+import pathlib
 import sys
+import enum
+from typing import Any
+
+
+class TokenType(enum.Enum):
+    LEFT_PAREN = "LEFT_PAREN"
+    RIGHT_PAREN = "RIGHT_PAREN"
+    LEFT_BRACE = "LEFT_BRACE"
+    RIGHT_BRACE = "RIGHT_BRACE"
+    STAR = "STAR"
+    DOT = "DOT"
+    COMMA = "COMMA"
+    PLUS = "PLUS"
+    MINUS = "MINUS"
+    SEMICOLON = "SEMICOLON"
+    EQUAL = "EQUAL"
+    EQUAL_EQUAL = "EQUAL_EQUAL"
+    BANG = "BANG"
+    BANG_EQUAL = "BANG_EQUAL"
+    LESS = "LESS"
+    LESS_EQUAL = "LESS_EQUAL"
+    GREATER = "GREATER"
+    GREATER_EQUAL = "GREATER_EQUAL"
+    SLASH = "SLASH"
+    STRING = "STRING"
+    NUMBER = "NUMBER"
+    EOF = "EOF"
+
+
+class Token:
+    def __init__(self, type: TokenType, lexeme: str, literal: Any | None, line: int):
+        self.type = type
+        self.lexeme = lexeme
+        self.literal = literal
+        self.line = line
+
+    def __str__(self) -> str:
+        literal_str = "null" if self.literal is None else self.literal
+        return f"{self.type.value}: {self.lexeme}: {literal_str}"
+
+
+class Scanner:
+    def __init__(self, source: str) -> None:
+        self.source = source
+        self.tokens: list[Token] = []
+        self.start = 0
+        self.current = 0
+        self.line = 1
+        self.errors: list[str] = []
+
+    def scan_tokens(self) -> tuple[list[Token], list[str]]:
+        while not self.is_at_end():
+            self.start = self.current
+            self.scan_token()
+        self.tokens.append(Token(TokenType.EOF, "", None, self.line))
+        return self.tokens, self.errors
+
+    def is_at_end(self) -> bool:
+        return self.current >= len(self.source)
+
+    def scan_token(self) -> None:
+        char = self.advance()
+        match char:
+            case "(":
+                self.add_token(TokenType.LEFT_PAREN)
+            case ")":
+                self.add_token(TokenType.RIGHT_PAREN)
+            case "{":
+                self.add_token(TokenType.LEFT_BRACE)
+            case "}":
+                self.add_token(TokenType.RIGHT_BRACE)
+            case "*":
+                self.add_token(TokenType.STAR)
+            case ".":
+                self.add_token(TokenType.DOT)
+            case ",":
+                self.add_token(TokenType.COMMA)
+            case "+":
+                self.add_token(TokenType.PLUS)
+            case "-":
+                self.add_token(TokenType.MINUS)
+            case ";":
+                self.add_token(TokenType.SEMICOLON)
+            case "!":
+                self.add_token(TokenType.BANG_EQUAL) if self.match(
+                    "="
+                ) else self.add_token(TokenType.BANG)
+            case "=":
+                self.add_token(TokenType.EQUAL_EQUAL) if self.match(
+                    "="
+                ) else self.add_token(TokenType.EQUAL)
+            case "<":
+                self.add_token(TokenType.LESS_EQUAL) if self.match(
+                    "="
+                ) else self.add_token(TokenType.LESS)
+            case "<":
+                self.add_token(TokenType.GREATER_EQUAL) if self.match(
+                    "="
+                ) else self.add_token(TokenType.GREATER)
+            case "/":
+                if self.match("/"):
+                    while self.peek != "\n" and not self.is_at_end():
+                        self.advance()
+                else:
+                    self.add_token(TokenType.SLASH)
+            case " " | "\r" | "\t":
+                ...
+            case "\n":
+                self.line += 1
+            case '"':
+                self.string()
+            case _:
+                if self.is_digit(char):
+                    self.number()
+                else:
+                    self.error(f"Unexpected character: {char}")
+
+    def advance(self) -> str:
+        self.current += 1
+        return self.source[self.current - 1]
+
+    def add_token(self, type: TokenType, literal: Any | None = None) -> None:
+        text = self.source[self.start: self.current]
+        self.tokens.append(Token(type, text, literal, self.line))
+
+    def peek(self) -> str:
+        return "\0" if self.is_at_end() else self.source[self.current]
+
+    def peek_next(self) -> str:
+        if self.current + 1 >= len(self.source):
+            return "\0"
+        return self.source[self.current + 1]
+
+    def match(self, expected: str) -> bool:
+        if self.is_at_end():
+            return False
+        if self.source[self.current] != expected:
+            return False
+        self.current += 1
+        return True
+
+    def string(self) -> None:
+        while self.peek() != '"' and not self.is_at_end():
+            if self.peek() == "\n":
+                self.line += 1
+            self.advance()
+
+        if self.is_at_end():
+            self.errors.append(f"[line {self.line}] Error: Unterminated string.")
+            return
+
+        self.advance()
+
+        value = self.source[self.start + 1: self.current - 1]
+        self.add_token(TokenType.STRING, value)
+
+    def is_digit(self, char: str) -> bool:
+        return "0" <= char <= "9"
+
+    def number(self) -> None:
+        while self.is_digit(self.peek()):
+            self.advance()
+
+        if self.peek() == "." and self.is_digit(self.peek_next()):
+            self.advance()
+
+        while self.is_digit(self.peek()):
+            self.advance()
+
+        self.add_token(TokenType.NUMBER, float(self.source[self.start: self.current]))
+
+    def error(self, char: str) -> None:
+        self.errors.append(f"[line {self.line}] Error: {char}")
 
 
 def main():
@@ -16,97 +190,16 @@ def main():
         print(f"Unknown command: {command}", file=sys.stderr)
         exit(1)
 
-    with open(filename) as file:
-        file_contents = file.read()
-    error = False
-    ptr = 0
-    line_number = 1
-    while ptr < len(file_contents):
-        c = file_contents[ptr]
-        if c == '(':
-            print("LEFT_PAREN ( null")
-        elif c == ')':
-            print("RIGHT_PAREN ) null")
-        elif c == '{':
-            print("LEFT_BRACE { null")
-        elif c == '}':
-            print("RIGHT_BRACE } null")
-        elif c == ',':
-            print("COMMA , null")
-        elif c == '.':
-            print("DOT . null")
-        elif c == '-':
-            print("MINUS - null")
-        elif c == '+':
-            print("PLUS + null")
-        elif c == ';':
-            print("SEMICOLON ; null")
-        elif c == '*':
-            print("STAR * null")
-        elif c == '=':
-            if ptr < len(file_contents) - 1 and file_contents[ptr + 1] == '=':
-                print("EQUAL_EQUAL == null")
-                c = '=='
-            else:
-                print("EQUAL = null")
-        elif c == '!':
-            if ptr < len(file_contents) - 1 and file_contents[ptr + 1] == '=':
-                print("BANG_EQUAL != null")
-                c = '!='
-            else:
-                print("BANG ! null")
-        elif c == '<':
-            if ptr < len(file_contents) - 1 and file_contents[ptr + 1] == '=':
-                print("LESS_EQUAL <= null")
-                c = '<='
-            else:
-                print("LESS < null")
-        elif c == '>':
-            if ptr < len(file_contents) - 1 and file_contents[ptr + 1] == '=':
-                print("GREATER_EQUAL >= null")
-                c = '>='
-            else:
-                print("GREATER > null")
-        elif c == '/':
-            if ptr < len(file_contents) - 1 and file_contents[ptr + 1] == '/':
-                line_number += 1
-                while ptr < len(file_contents) and file_contents[ptr] != "\n":
-                    ptr += 1
-                #c = '//' dont want to increment by 2 on comments
+    file_contents = pathlib.Path(filename).read_text()
+    scanner = Scanner(file_contents)
+    tokens, errors = scanner.scan_tokens()
 
-            else:
-                print("SLASH / null")
-        elif c == " " or c == "\t" or c == "r":
-            ptr += 1
-            continue
-        elif c == "\n":
-           line_number += 1
-           pass
-        elif c == '"':
-            word = ""
-            ptr += 1
-            while ptr < len(file_contents) and file_contents[ptr] != '"':
-                word += file_contents[ptr]
-                ptr += 1
-            if ptr == len(file_contents):
-                error = True
-                print(f"[line %s] Error: Unterminated string." % line_number, file=sys.stderr)
-            else:
-                print(f'STRING "{word}" {word}')
-        else:
-            error = True
-            print(
-                "[line %s] Error: Unexpected character: %s" % (line_number, c),
-                file=sys.stderr,
-            )
-            ptr += 1
-            continue
-        ptr += len(c)
-    print("EOF  null")
-    if error:
+    for token in tokens:
+        print(token)
+    for error in errors:
+        print(error, file=sys.stderr)
+    if errors:
         exit(65)
-    else:
-        exit(0)
 
 
 if __name__ == "__main__":
