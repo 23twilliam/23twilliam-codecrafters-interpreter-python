@@ -1,6 +1,9 @@
-import pathlib
-import sys
 import enum
+
+import pathlib
+
+import sys
+
 from typing import Any
 
 
@@ -30,18 +33,22 @@ class TokenType(enum.Enum):
 
 
 class Token:
-    def __init__(self, type: TokenType, lexeme: str, literal: Any | None, line: int):
+
+    def __init__(
+            self, type: TokenType, lexeme: str, literal: Any | None, line: int
+    ) -> None:
         self.type = type
         self.lexeme = lexeme
         self.literal = literal
         self.line = line
 
     def __str__(self) -> str:
-        literal_str = "null" if self.literal is None else self.literal
-        return f"{self.type.value}: {self.lexeme}: {literal_str}"
+        literal_str = "null" if self.literal is None else str(self.literal)
+        return f"{self.type.value} {self.lexeme} {literal_str}"
 
 
 class Scanner:
+
     def __init__(self, source: str) -> None:
         self.source = source
         self.tokens: list[Token] = []
@@ -95,13 +102,13 @@ class Scanner:
                 self.add_token(TokenType.LESS_EQUAL) if self.match(
                     "="
                 ) else self.add_token(TokenType.LESS)
-            case "<":
+            case ">":
                 self.add_token(TokenType.GREATER_EQUAL) if self.match(
                     "="
                 ) else self.add_token(TokenType.GREATER)
             case "/":
                 if self.match("/"):
-                    while self.peek != "\n" and not self.is_at_end():
+                    while self.peek() != "\n" and not self.is_at_end():
                         self.advance()
                 else:
                     self.add_token(TokenType.SLASH)
@@ -112,6 +119,7 @@ class Scanner:
             case '"':
                 self.string()
             case _:
+                self.error(f"Unexpected character: {char}")
                 if self.is_digit(char):
                     self.number()
                 else:
@@ -146,13 +154,10 @@ class Scanner:
             if self.peek() == "\n":
                 self.line += 1
             self.advance()
-
         if self.is_at_end():
             self.errors.append(f"[line {self.line}] Error: Unterminated string.")
             return
-
         self.advance()
-
         value = self.source[self.start + 1: self.current - 1]
         self.add_token(TokenType.STRING, value)
 
@@ -162,38 +167,28 @@ class Scanner:
     def number(self) -> None:
         while self.is_digit(self.peek()):
             self.advance()
-
         if self.peek() == "." and self.is_digit(self.peek_next()):
             self.advance()
-
         while self.is_digit(self.peek()):
             self.advance()
-
         self.add_token(TokenType.NUMBER, float(self.source[self.start: self.current]))
 
     def error(self, char: str) -> None:
         self.errors.append(f"[line {self.line}] Error: {char}")
 
 
-def main():
-    # You can use print statements as follows for debugging, they'll be visible when running tests.
-    print("Logs from your program will appear here!", file=sys.stderr)
-
+def main() -> None:
     if len(sys.argv) < 3:
         print("Usage: ./your_program.sh tokenize <filename>", file=sys.stderr)
         exit(1)
-
     command = sys.argv[1]
     filename = sys.argv[2]
-
     if command != "tokenize":
         print(f"Unknown command: {command}", file=sys.stderr)
         exit(1)
-
     file_contents = pathlib.Path(filename).read_text()
     scanner = Scanner(file_contents)
     tokens, errors = scanner.scan_tokens()
-
     for token in tokens:
         print(token)
     for error in errors:
