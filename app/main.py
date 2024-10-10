@@ -176,7 +176,7 @@ class Scanner:
         self.add_token(TokenType.NUMBER, float(self.source[self.start: self.current]))
 
     def is_alpha(self, char: str) -> bool:
-        return ('a' <= char <= 'z') or ('A' <= char <= 'Z') or char == '_'
+        return ("a" <= char <= "z") or ("A" <= char <= "Z") or char == "_"
 
     def is_alpha_numeric (self, char: str) -> bool:
         return self.is_alpha(char) or self.is_digit(char)
