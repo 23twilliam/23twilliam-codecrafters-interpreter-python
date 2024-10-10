@@ -119,7 +119,6 @@ class Scanner:
             case '"':
                 self.string()
             case _:
-                self.error(f"Unexpected character: {char}")
                 if self.is_digit(char):
                     self.number()
                 else:
