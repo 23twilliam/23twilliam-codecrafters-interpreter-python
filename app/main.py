@@ -317,7 +317,7 @@ def Literal(value):
 
 
 def Unary(operator, right):
-    return {"operator": operator, "right": right}
+    return f"({operator.lexme} {right})"
 
 
 class Parser:
