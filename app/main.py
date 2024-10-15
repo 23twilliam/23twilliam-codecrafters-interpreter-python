@@ -302,7 +302,11 @@ def Binary(left, operator, right):
 
 
 def Grouping(expression):
-    return {"expression": expression}
+    if not expression:
+        global exit_code
+        exit_code = 65
+        return ""
+    return f"(group {expression})"
 
 
 def Literal(value):
@@ -416,6 +420,14 @@ class Parser:
             self.consume(TOKEN_TYPE.RIGHT_PAREN, "Expect ')' after expression.")
             return Grouping(expr)
 
+    def consume(self, token_type, message):
+        if self.check(token_type):
+            return self.advance()
+
+        global exit_code
+        exit_code = 65
+        print(message, file=sys.stderr)
+        exit(exit_code)
 
 def main():
     # You can use print statements as follows for debugging, they'll be visible when running tests.
