@@ -7,83 +7,45 @@ exit_code: int = 0
 
 class TOKEN_TYPE(Enum):
     NONE = -2
-
     EOF = -1
-
     STRING = 0
-
     NUMBER = 1
-
     IDENTIFIER = 2
-
     LEFT_PAREN = 3
-
     RIGHT_PAREN = 4
-
     LEFT_BRACE = 5
-
     RIGHT_BRACE = 6
-
     COMMA = 7
-
     DOT = 8
-
     MINUS = 9
-
     PLUS = 10
-
     SEMICOLON = 11
-
     STAR = 12
-
     SLASH = 13
-
     EQUAL_EQUAL = 14
-
     EQUAL = 15
-
     BANG_EQUAL = 16
-
     BANG = 17
-
     LESS_EQUAL = 18
-
     LESS = 19
-
     GREATER_EQUAL = 20
-
     GREATER = 21
 
     AND = 22
-
     OR = 23
-
     IF = 24
-
     ELSE = 25
-
     FOR = 26
-
     WHILE = 27
-
     TRUE = 28
-
     FALSE = 29
-
     CLASS = 30
-
     SUPER = 31
-
     THIS = 32
-
     VAR = 33
-
     FUN = 34
-
     RETURN = 35
-
     PRINT = 36
-
     NIL = 37
 
     def __str__(self):
@@ -94,9 +56,7 @@ class Token:
 
     def __init__(self, type: TOKEN_TYPE, name: str, value):
         self.type = type
-
         self.name = name
-
         self.value = value
 
     def __str__(self):
@@ -109,217 +69,118 @@ class Token:
 class Lexer:
 
     def __init__(self, program: str):
-
         self.program: str = program
-
         self.size: int = len(self.program)
-
         self.i: int = 0
-
         if self.size >= 1:
             self.c: str = self.program[self.i]
-
         self.line: int = 1
 
     def advance(self):
-
         self.i += 1
-
         if self.i < self.size:
             self.c = self.program[self.i]
 
     def advance_with(self, token: Token) -> Token:
-
         self.advance()
-
         return token
 
     def skip_whitespace(self):
-
         while self.i < self.size and self.c.isspace():
-
             match self.c:
-
                 case self.c if self.c in [" ", "\r", "\t"]:
-
                     self.advance()
-
                 case "\n":
-
                     self.advance()
-
                     self.line += 1
 
     def peek(self) -> Token:
-
         i = self.i
-
         c = self.c
-
         self.advance()
-
         next: Token
-
         self.skip_whitespace()
-
         match self.c:
-
             case self.c if self.i >= self.size:
-
                 next = Token(TOKEN_TYPE.EOF, "", "null")
-
             case "(":
-
                 next = self.advance_with(Token(TOKEN_TYPE.LEFT_PAREN, "(", "null"))
-
             case ")":
-
                 next = self.advance_with(Token(TOKEN_TYPE.RIGHT_PAREN, ")", "null"))
-
             case "{":
-
                 next = self.advance_with(Token(TOKEN_TYPE.LEFT_BRACE, "{", "null"))
-
             case "}":
-
                 next = self.advance_with(Token(TOKEN_TYPE.RIGHT_BRACE, "}", "null"))
-
             case ",":
-
                 next = self.advance_with(Token(TOKEN_TYPE.COMMA, ",", "null"))
-
             case ".":
-
                 next = self.advance_with(Token(TOKEN_TYPE.DOT, ".", "null"))
-
             case "-":
-
                 next = self.advance_with(Token(TOKEN_TYPE.MINUS, "-", "null"))
-
             case "+":
-
                 next = self.advance_with(Token(TOKEN_TYPE.PLUS, "+", "null"))
-
             case ";":
-
                 next = self.advance_with(Token(TOKEN_TYPE.SEMICOLON, ";", "null"))
-
             case "*":
-
                 next = self.advance_with(Token(TOKEN_TYPE.STAR, "*", "null"))
-
             case "/":
-
                 next = self.advance_with(Token(TOKEN_TYPE.SLASH, "/", "null"))
-
             case "=":
-
                 next = self.advance_with(Token(TOKEN_TYPE.EQUAL, "=", "null"))
-
             case "!":
-
                 next = self.advance_with(Token(TOKEN_TYPE.BANG, "!", "null"))
-
             case "<":
-
                 next = self.advance_with(Token(TOKEN_TYPE.LESS, "<", "null"))
-
             case ">":
-
                 next = self.advance_with(Token(TOKEN_TYPE.GREATER, ">", "null"))
-
             case '"':
-
                 next = self.next_string()
-
             case "_":
-
                 next = self.next_id()
-
             case _:
-
                 if self.c.isalpha():
                     next = self.next_id()
-
                 if self.c.isdigit():
-
                     next = self.next_number()
-
                 else:
-
                     next = self.advance_with(Token(TOKEN_TYPE.NONE, "", ""))
-
         self.i = i
-
         self.c = c
-
         return next
 
     def next_id(self) -> Token:
-
         i = ""
-
         while self.i < self.size and (self.c.isalnum() or self.c == "_"):
             i += self.c
-
             self.advance()
-
         match i:
-
             case "and":
-
                 return Token(TOKEN_TYPE.AND, i, "null")
-
             case "or":
-
                 return Token(TOKEN_TYPE.OR, i, "null")
-
             case "if":
-
                 return Token(TOKEN_TYPE.IF, i, "null")
-
             case "else":
-
                 return Token(TOKEN_TYPE.ELSE, i, "null")
-
             case "for":
-
                 return Token(TOKEN_TYPE.FOR, i, "null")
-
             case "while":
-
                 return Token(TOKEN_TYPE.WHILE, i, "null")
-
             case "true":
-
                 return Token(TOKEN_TYPE.TRUE, i, "null")
-
             case "false":
-
                 return Token(TOKEN_TYPE.FALSE, i, "null")
-
             case "class":
-
                 return Token(TOKEN_TYPE.CLASS, i, "null")
-
             case "super":
-
                 return Token(TOKEN_TYPE.SUPER, i, "null")
-
             case "this":
-
                 return Token(TOKEN_TYPE.THIS, i, "null")
-
             case "var":
-
                 return Token(TOKEN_TYPE.VAR, i, "null")
-
             case "fun":
-
                 return Token(TOKEN_TYPE.FUN, i, "null")
-
             case "return":
-
                 return Token(TOKEN_TYPE.RETURN, i, "null")
             case "print":
                 return Token(TOKEN_TYPE.PRINT, i, "null")
