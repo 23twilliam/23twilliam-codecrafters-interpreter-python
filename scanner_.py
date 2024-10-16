@@ -101,9 +101,7 @@ class Scanner:
                     self.error(f"Unexpected character: {c}")
 
     def is_alpha(self, c):
-        if ('a' <= c <= 'z') or ('A' <= c <= 'Z') or c == '_':
-            return True
-        return False
+        return ('a' <= c <= 'z') or ('A' <= c <= 'Z') or c == '_'
 
     def identifier(self):
         while self.is_alpha_numeric(self.peek()):
@@ -117,22 +115,16 @@ class Scanner:
         self.add_token(type)
 
     def is_alpha_numeric(self, c):
-        if self.is_digit(c) or self.is_alpha(c):
-            return True
-        return False
+        return self.is_digit(c) or self.is_alpha(c)
 
     def is_digit(self, c):
-        if '0' <= c <= '9':
-            return True
-        return False
+        return '0' <= c <= '9'
 
     def number(self):
         while self.is_digit(self.peek()):
             self.advance()
-
         if self.peek() == '.' and self.is_digit(self.peekNext()):
             self.advance()
-
             while self.is_digit(self.peek()):
                 self.advance()
 
@@ -152,9 +144,7 @@ class Scanner:
         if self.is_at_end():
             self.error("Unterminated string.")
             return
-
         self.advance()
-
         value = self.source[self.start + 1: self.current - 1]
         self.add_token('STRING', value)
 
@@ -176,9 +166,9 @@ class Scanner:
         token = self.source[self.start: self.current]
         self.tokens.append(Token(type, token, literal, self.line))
 
-    def error(self, message):
-        self.errors.append(f"[line {self.line}] Error: {message}")
-
     def advance(self):
         self.current += 1
         return self.source[self.current - 1]
+
+    def error(self, message):
+        self.errors.append(f"[line {self.line}] Error: {message}")

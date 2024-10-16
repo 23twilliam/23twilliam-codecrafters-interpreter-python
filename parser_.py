@@ -1,16 +1,13 @@
 def Binary(left, operator, right):
     return f"({operator.lexeme} {left} {right})"
 
-
 def Unary(operator, right):
     return f"({operator.lexeme} {right})"
-
 
 def Literal(expr):
     if expr == None:
         return "nil"
     return str(expr).lower()
-
 
 def Grouping(expr):
     return f"(group {expr})"
@@ -74,17 +71,14 @@ class Parser:
 
         if self.match(["NUMBER", "STRING"]):
             return Literal(self.previous().literal)
-
         if self.match(["LEFT_PAREN"]):
             expr = self.expression()
             self.consume("RIGHT_PAREN", "Unmatched parentheses.")
             return Grouping(expr)
-
         self.error(self.peek(), "Expect expression")
 
     def term(self):
         expr = self.factor()
-
         while self.match(["MINUS", "PLUS"]):
             operator = self.previous()
             right = self.factor()
