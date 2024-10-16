@@ -1,25 +1,9 @@
 import sys
 from scanner_ import Scanner
 from parser_ import Parser
-from evaluation_ import Interpreter
-
-def evaluate(content: str):
-    scanner = Scanner(content)
-    tokens = scanner.scan_tokens()
+from interpreter_ import Interpreter
 
 
-    parser = Parser(tokens)
-    root = parser.primary()
-
-    interpreter = Interpreter()
-
-    value = interpreter.evaluate(root)
-    if value is None:
-        value = "nil"
-    elif isinstance(value, bool):
-        value = str(value).lower()
-
-    print(value)
 
 def main():
     if len(sys.argv) < 3:
@@ -46,8 +30,6 @@ def main():
             exit(65)
 
     elif command == "parse":
-        with open(filename) as file:
-            file_contents = file.read()
 
         scanner = Scanner(file_contents)
         tokens, errors = scanner.scan_tokens()
@@ -61,7 +43,21 @@ def main():
 
         print(expression)
     elif command == "evaluate":
-        evaluate(file_contents)
+        scanner = Scanner(file_contents)
+        tokens, errors = scanner.scan_tokens()
+
+        parser = Parser(tokens)
+        expression = parser.expression()
+
+        interpreter = Interpreter()
+        print(expression)
+        interpreter.interpret(expression)
+
+        for error in parser.errors:
+            print(error, file=sys.stderr)
+        if parser.errors:
+            exit(65)
+
     else:
         print(f"Unknown command: {command}", file=sys.stderr)
         exit(1)
