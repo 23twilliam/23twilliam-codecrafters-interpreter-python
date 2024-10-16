@@ -298,7 +298,7 @@ class Lexer:
 
 
 def Binary(left, operator, right):
-    return f"({operator} {left} {right})"
+    return f"({operator.name} {left} {right})"
 
 
 def Grouping(expression):
