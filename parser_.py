@@ -1,7 +1,3 @@
-from token_ import Token
-import sys
-
-
 def Binary(left, operator, right):
     return f"({operator.lexeme} {left} {right})"
 
