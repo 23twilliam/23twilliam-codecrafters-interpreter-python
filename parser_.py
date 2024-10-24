@@ -8,9 +8,8 @@ class Parser:
         self.current = 0
         self.errors = []
 
-    def expression(self):
-        return self.equality()
-    
+
+
     def equality(self):
         expr = self.comparison()
 
@@ -60,7 +59,7 @@ class Parser:
         if self.match(["NUMBER", "STRING"]):
             return Literal(self.previous().literal)
         if self.match(["LEFT_PAREN"]):
-            expr = self.expression()
+            expr = expression()
             self.consume("RIGHT_PAREN", "Unmatched parentheses.")
             return Grouping(expr)
         self.error(self.peek(), "Expect expression")
