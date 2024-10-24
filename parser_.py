@@ -8,7 +8,9 @@ class Parser:
         self.current = 0
         self.errors = []
 
-
+    def expression(self):
+        return self.equality()
+    
     def equality(self):
         expr = self.comparison()
 
