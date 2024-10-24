@@ -1,16 +1,4 @@
-def Binary(left, operator, right):
-    return f"({operator.lexeme} {left} {right})"
-
-def Unary(operator, right):
-    return f"({operator.lexeme} {right})"
-
-def Literal(expr):
-    if expr == None:
-        return "nil"
-    return str(expr).lower()
-
-def Grouping(expr):
-    return f"(group {expr})"
+from expr_ import Binary, Unary, Literal, Grouping, expression
 
 
 class Parser:
@@ -20,8 +8,6 @@ class Parser:
         self.current = 0
         self.errors = []
 
-    def expression(self):
-        return self.equality()
 
     def equality(self):
         expr = self.comparison()

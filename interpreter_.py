@@ -1,6 +1,7 @@
+from expr_ import Literal, expression
 
+class Interpreter:
 
-class Interpreter():
-    def interpret(self, expr: Expr) -> None:
-        if isinstance(expr, LiteralExpr):
+    def interpret(self, expr: expression):
+        if isinstance(expr, Literal):
             print(expr.value)
