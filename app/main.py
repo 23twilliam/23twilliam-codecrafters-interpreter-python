@@ -45,7 +45,7 @@ def main():
         tokens, errors = scanner.scan_tokens()
 
         parser = Parser(tokens)
-        expression = expression
+        expression = parser.expression()
 
         interpreter = Interpreter()
         print(expression)
