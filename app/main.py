@@ -2,41 +2,65 @@ import sys
 from scanner_ import Scanner
 from parser_ import Parser
 from interpreter_ import Interpreter
+from expression import expression
 
 
 def main():
     if len(sys.argv) < 3:
-        print("Usage: ./your_program.sh evaluate <file>")
-        sys.exit(1)
+        print("Usage: ./your_program.sh tokenize <filename>", file=sys.stderr)
+        exit(1)
 
-    command, file_path = sys.argv[1], sys.argv[2]
-    if command != "evaluate":
-        print(f"Unknown command: {command}")
-        sys.exit(1)
+    command = sys.argv[1]
+    filename = sys.argv[2]
 
-    try:
-        with open(file_path, 'r') as file:
-            source = file.read()
+    with open(filename) as file:
+        file_contents = file.read()
 
-        # Tokenize input
-        scanner = Scanner(source)
+    if command == "tokenize":
+        scanner = Scanner(file_contents)
         tokens, errors = scanner.scan_tokens()
+
+        for token in tokens:
+            print(token)
+
+        for error in errors:
+            print(error, file=sys.stderr)
+
         if errors:
-            for error in errors:
-                print(error)
-            sys.exit(1)
+            exit(65)
 
-        # Parse tokens into expressions
+    elif command == "parse":
+
+        scanner = Scanner(file_contents)
+        tokens, errors = scanner.scan_tokens()
+
         parser = Parser(tokens)
-        expression = parser.expression()
+        expression = expression()
+        for error in parser.errors:
+            print(error, file=sys.stderr)
+        if parser.errors:
+            exit(65)
 
-        # Evaluate expression
+        print(expression)
+    elif command == "evaluate":
+        scanner = Scanner(file_contents)
+        tokens, errors = scanner.scan_tokens()
+
+        parser = Parser(tokens)
+        expression = expression
+
         interpreter = Interpreter()
+        print(expression)
         interpreter.interpret(expression)
 
-    except FileNotFoundError:
-        print(f"File not found: {file_path}")
-        sys.exit(1)
+        for error in parser.errors:
+            print(error, file=sys.stderr)
+        if parser.errors:
+            exit(65)
+
+    else:
+        print(f"Unknown command: {command}", file=sys.stderr)
+        exit(1)
 
 
 if __name__ == "__main__":

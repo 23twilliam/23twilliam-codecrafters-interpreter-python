@@ -5,8 +5,9 @@ def Unary(operator, right):
     return f"({operator.lexeme} {right})"
 
 def Literal(expr):
-    def __init__(self, value):
-        self.value = value
+    if expr == None:
+        return "nil"
+    return str(expr).lower()
 
 def Grouping(expr):
     return f"(group {expr})"
