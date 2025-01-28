@@ -5,9 +5,11 @@ def Unary(operator, right):
     return f"({operator.lexeme} {right})"
 
 def Literal(expr):
-    if expr == None:
-        return "nil"
-    return str(expr).lower()
+    def __init__(self, value):
+        self.value = value
+
+    def __str__(self):
+        return "nil" if self.value is None else str(self.value).lower()
 
 def Grouping(expr):
     return f"(group {expr})"

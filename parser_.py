@@ -62,7 +62,7 @@ class Parser:
             return Literal(self.previous().literal)
         if self.match(["LEFT_PAREN"]):
             expr = self.expression()
-            self.consume("RIGHT_PAREN", "Unmatched parentheses.")
+            self.consume("RIGHT_PAREN", "Expect ')' after expression.")
             return Grouping(expr)
         self.error(self.peek(), "Expect expression")
 
