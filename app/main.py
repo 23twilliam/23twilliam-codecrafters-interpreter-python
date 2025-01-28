@@ -2,8 +2,6 @@ import sys
 from scanner_ import Scanner
 from parser_ import Parser
 from interpreter_ import Interpreter
-from expression import expression
-
 
 def main():
     if len(sys.argv) < 3:
@@ -35,7 +33,7 @@ def main():
         tokens, errors = scanner.scan_tokens()
 
         parser = Parser(tokens)
-        expression = expression()
+        expression = parser.expression()
         for error in parser.errors:
             print(error, file=sys.stderr)
         if parser.errors:
